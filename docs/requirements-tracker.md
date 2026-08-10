@@ -26,22 +26,22 @@ Snowman is a Wordle-inspired word guessing game. Before starting a game, the pla
 
 | ID       | Requirement                                                                                      | Phase | Tested? |
 | -------- | ------------------------------------------------------------------------------------------------ | ----: | :-----: |
-| GAME-001 | A player can create a new game with a supported word length.                                     |     1 |    ☐    |
-| GAME-002 | A new game's hidden word matches the requested word length.                                      |     1 |    ☐    |
-| GAME-003 | Unsupported word lengths are rejected.                                                           |     1 |    ☐    |
-| GAME-004 | A new game begins with zero guesses.                                                             |     1 |    ☐    |
-| GAME-005 | A player can submit a guess.                                                                     |     1 |    ☐    |
-| GAME-006 | A guess must match the hidden word's length.                                                     |     1 |    ☐    |
+| GAME-001 | A player can create a new game with a supported word length.                                     |     1 |     ✅  |
+| GAME-002 | A new game's hidden word matches the requested word length.                                      |     1 |    ✅   |
+| GAME-003 | Unsupported word lengths are rejected.                                                           |     1 |    ✅   |
+| GAME-004 | A new game begins with zero guesses.                                                             |     1 |    ✅   |
+| GAME-005 | A player can submit a guess.                                                                     |     1 |    ✅   |
+| GAME-006 | A guess must match the hidden word's length.                                                     |     1 |    ✅   |
 | GAME-007 | A guess must be a valid word.                                                                    |     1 |    ☐    |
-| GAME-008 | A submitted guess is recorded by the game.                                                       |     1 |    ☐    |
-| GAME-009 | Each letter in a guess is evaluated as correct, present, or absent.                              |     1 |    ☐    |
+| GAME-008 | A submitted guess is recorded by the game.                                                       |     1 |    ✅   |
+| GAME-009 | Each letter in a guess is evaluated as correct, present, or absent.                              |     1 |    ✅   |
 | GAME-010 | Repeated letters are evaluated correctly when the hidden word contains repeated letters.         |     1 |    ☐    |
-| GAME-011 | A correct guess changes the game status to won.                                                  |     1 |    ☐    |
-| GAME-012 | An incorrect guess consumes one available attempt.                                               |     1 |    ☐    |
+| GAME-011 | A correct guess changes the game status to won.                                                  |     1 |    ✅   |
+| GAME-012 | An incorrect guess consumes one available attempt.                                               |     1 |    ✅   |
 | GAME-013 | The game changes to lost when the player uses all available attempts without guessing correctly. |     1 |    ☐    |
-| GAME-014 | A completed game cannot accept additional guesses.                                               |     1 |    ☐    |
-| GAME-015 | The game can provide its current status.                                                         |     1 |    ☐    |
-| GAME-016 | The game can provide the guesses submitted so far.                                               |     1 |    ☐    |
+| GAME-014 | A completed game cannot accept additional guesses.                                               |     1 |    ✅   |
+| GAME-015 | The game can provide its current status.                                                         |     1 |    ✅   |
+| GAME-016 | The game can provide the guesses submitted so far.                                               |     1 |   ✅    |
 
 ### API
 
