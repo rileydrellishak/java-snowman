@@ -14,7 +14,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 public class SnowmanGameTest {
-    // Counting the number of guesses
+    // GAME-004 A new game begins with zero guesses.
     @Test
     void newGameHasZeroGuesses() {
         int numGuesses = 0;
@@ -25,6 +25,32 @@ public class SnowmanGameTest {
         }
     }
 
+    // GAME-001 A player can create a new game with a supported word length.
+    // GAME-002 A new game's hidden word matches the requested word length.
+    @Test
+    void createNewGameWithValidWordLength() {
+        Integer wordLength = 5;
+        SnowmanGame testGame = new SnowmanGame(wordLength);
+        assertEquals(wordLength, testGame.getHiddenWordLength());
+    }
+
+    @Test
+    void createNewGameWithInvalidWordLength() {
+        Integer[] invalidWordLengths = {2, 20};
+        for (Integer i: invalidWordLengths) {
+            String errorString = "Word length must be between 4 and 7 letters.";
+
+            InvalidWordLengthException exception = assertThrows(
+                InvalidWordLengthException.class, () -> {
+                    new SnowmanGame(i);;
+                }
+            );
+            assertEquals(errorString, exception.getMessage());
+        }
+    }
+
+    // GAME-005 A player can submit a guess.
+    // GAME-008 A submitted guess is recorded by the game.
     @Test
     void gameShowsNumOfGuessesSubmittedSoFar() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -36,7 +62,8 @@ public class SnowmanGameTest {
         }
     }
 
-    // Word length validation
+    // GAME-003 Unsupported word lengths are rejected.
+    // GAME-006 A guess must match the hidden word's length.
     @Test
     void rejectsWordsThatAreInvaidLengths() {
         String[] words = {"the", "abcdefghijklm"};
@@ -47,6 +74,7 @@ public class SnowmanGameTest {
         }
     }
 
+    // GAME-006 A guess must match the hidden word's length.
     @Test
     void acceptsWordsThatAreValidLengths() {
         SnowmanGame testGame = new SnowmanGame(5);
@@ -58,7 +86,7 @@ public class SnowmanGameTest {
         }
     }
 
-    // Submit guesses and persist guesses
+    // GAME-008 A submitted guess is recorded by the game.
     @Test
     void playerSubmitsWordFirstGuess() {
         SnowmanGame testGame = new SnowmanGame(5);
@@ -92,7 +120,7 @@ public class SnowmanGameTest {
         }
     }
 
-    // Ensures invalid guesses are not persisted
+    // GAME-006 A guess must match the hidden word's length.
     @Test
     void playerSubmitsInvalidWord() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -118,7 +146,7 @@ public class SnowmanGameTest {
         }
     } 
 
-    // Confirms guessing the correct word turns the winState to true
+    // GAME-011 A correct guess changes the game status to won.
     @Test
     void playerGuessesCorrectWord() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -127,6 +155,8 @@ public class SnowmanGameTest {
 
         assertTrue(testGame.winState);
     }
+
+    // GAME-009 Each letter in a guess is evaluated as correct, present, or absent.
 
     // Confirming mapping indices to characters
     // word = {0: w, 1: o, 2: r, 3: d}
@@ -145,30 +175,6 @@ public class SnowmanGameTest {
         assertEquals(expectedMap, testGame.mapWord(example));
     }
 
-    // Creating a new game
-    @Test
-    void createNewGameWithValidWordLength() {
-        Integer wordLength = 5;
-        SnowmanGame testGame = new SnowmanGame(wordLength);
-        assertEquals(wordLength, testGame.getHiddenWordLength());
-    }
-
-    @Test
-    void createNewGameWithInvalidWordLength() {
-        Integer[] invalidWordLengths = {2, 20};
-        for (Integer i: invalidWordLengths) {
-            String errorString = "Word length must be between 4 and 7 letters.";
-
-            InvalidWordLengthException exception = assertThrows(
-                InvalidWordLengthException.class, () -> {
-                    new SnowmanGame(i);;
-                }
-            );
-            assertEquals(errorString, exception.getMessage());
-        }
-    }
-
-    // Comparing the guessed word to the hidden word
     @Test
     void evaluateGuessAllAbsent() {
         SnowmanGame testGame = new SnowmanGame(5);
@@ -250,6 +256,7 @@ public class SnowmanGameTest {
         assertEquals(expected, testGame.evaluateGuess(guess));
     }
 
+    // GAME-010 Repeated letters are evaluated correctly when the hidden word contains repeated letters.
     @Test
     void evaluateGuessDoesNotOvercountDuplicateLetters() {
         SnowmanGame testGame = new SnowmanGame(5);
@@ -283,8 +290,7 @@ public class SnowmanGameTest {
         assertEquals(expected, testGame.evaluateGuess(guess));
     }
 
-
-    // Validating that guessing the correct word results in a win
+    // GAME-011 A correct guess changes the game status to won.
     @Test
     void guessCorrectWordResultsInWinStatus() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -300,7 +306,7 @@ public class SnowmanGameTest {
         assertEquals(3, testGame.numGuesses);
     }
 
-    // Scenarios that use all the guesses
+    // GAME-013 The game changes to lost when the player uses all available attempts without guessing correctly.
     @Test
     void useAllGuessesAndLoseGame() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -341,6 +347,7 @@ public class SnowmanGameTest {
         assertEquals(errorString, exception.getMessage());
     }
 
+    // GAME-014 A completed game cannot accept additional guesses.
     @Test
     void completedGameCannotAcceptAdditionalGuesses() {
         SnowmanGame testGame = new SnowmanGame(4);
@@ -363,16 +370,23 @@ public class SnowmanGameTest {
         assertFalse(Arrays.asList(testGame.guessedWords).contains("dome"));
     }
 
+    // GAME-012 An incorrect guess consumes one available attempt.
+    // GAME-015 The game can provide its current status.
+    // GAME-016 The game can provide the guesses submitted so far.
     @Test
     void gameProvidesStatus() {
         SnowmanGame testGame = new SnowmanGame(4);
 
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool"};
+        Integer guesses = 1;
         for (String word: words) {
             testGame.submitGuess(word);
+            assertEquals(testGame.numGuesses, guesses);
+            guesses += 1;
         }
         assertTrue(testGame.stillPlaying);
         assertFalse(testGame.winState);
+        assertEquals(testGame.numGuesses, 2);
     }
 }

@@ -27,8 +27,6 @@ import javax.print.attribute.standard.Media;
 @WebMvcTest(SnowmanController.class)
 public class SnowmanControllerTest {
 
-    // When I make a GET request to /hello, do I get 200 OK and "Hello, Snowman!"?
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,14 +38,8 @@ public class SnowmanControllerTest {
         snowmanController.resetGame();
     }
 
-    @Test
-    void helloReturnsDefaultGreeting() throws Exception {
-        mockMvc.perform(get("/hello"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("Hello Snowman!"));
-    }
-
-    // When I start a new game with a valid word length, is there a new game?
+    // API-001 A client can request a new game with a selected word length.
+    // API-002 The API returns the current game state when a game is created.
 
     @Test void startNewGame() throws Exception {
         Integer[] validWordLengths = {4, 5, 6, 7};
@@ -59,7 +51,8 @@ public class SnowmanControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.numGuesses").value(0))
                 .andExpect(jsonPath("$.hiddenWord").isNotEmpty())
-                .andExpect(jsonPath("$.hiddenWord").value(hasLength(i)));        
+                .andExpect(jsonPath("$.hiddenWord").value(hasLength(i)))
+                .andExpect(jsonPath("$.winState").value(false));     
             }
         }
 
@@ -79,7 +72,7 @@ public class SnowmanControllerTest {
         }
     };
 
-    // When I get the current game, does it return a game?
+    // API-005 The API returns the current game status.
 
     @Test void getGame() throws Exception {
         Integer[] validWordLengths = {4, 5, 6, 7};
@@ -99,7 +92,7 @@ public class SnowmanControllerTest {
         }
     }
 
-    // If no game is created, is a 404 returned?
+    // API-008 The API returns appropriate errors for invalid requests.
 
     @Test void getGameNoGameCreated() throws Exception {
 
@@ -107,7 +100,7 @@ public class SnowmanControllerTest {
         .andExpect(status().isNotFound());
     };
 
-    // When I make a guess, is it stored?
+    // API-003 A client can submit a guess for an active game.
 
     @Test void makeGuess() throws Exception {
         //     private String[] hiddenWords = {"game", "house", "hidden", "differs"};
@@ -134,6 +127,8 @@ public class SnowmanControllerTest {
         }
     }
 
+    // API-006 The API rejects guesses that do not meet the game's requirements.
+
     @Test void makeInvalidGuess() throws Exception {
         mockMvc.perform(
                 post("/game/new")
@@ -157,6 +152,8 @@ public class SnowmanControllerTest {
         )
         .andExpect(status().isNotFound());
     }
+
+    // API-007 The API prevents guesses after a game has ended.
 
     @Test void makeGuessAfterWinning() throws Exception {
         for (Map.Entry<Integer, List<String>> entry : TestData.WINNING_GAMES.entrySet()) {
@@ -207,6 +204,8 @@ public class SnowmanControllerTest {
             }
         }
     }
+
+    // API-004 The API returns the evaluation of a submitted guess.
 
     @Test void getGuessEvaluation() throws Exception {
         for (Map.Entry<Integer, List<String>> entry : TestData.WINNING_GAMES.entrySet()) {

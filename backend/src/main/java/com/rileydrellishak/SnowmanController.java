@@ -20,12 +20,6 @@ public class SnowmanController {
         currentGame = null;
     }
 
-    @GetMapping("/hello")
-    public String hello(
-        @RequestParam(value = "name", defaultValue = "Snowman") String name) {
-        return String.format("Hello %s!", name);
-    };
-
     @ExceptionHandler(InvalidWordLengthException.class)
     public ResponseEntity<Void> handleInvalidWordLengthException(InvalidWordLengthException e) {
         return ResponseEntity.badRequest().build();
