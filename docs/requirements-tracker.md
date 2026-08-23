@@ -47,14 +47,14 @@ Snowman is a Wordle-inspired word guessing game. Before starting a game, the pla
 
 | ID      | Requirement                                                       | Phase | Tested? |
 | ------- | ----------------------------------------------------------------- | ----: | :-----: |
-| API-001 | A client can request a new game with a selected word length.      |     2 |    ☐    |
-| API-002 | The API returns the current game state when a game is created.    |     2 |    ☐    |
-| API-003 | A client can submit a guess for an active game.                   |     2 |    ☐    |
-| API-004 | The API returns the evaluation of a submitted guess.              |     2 |    ☐    |
-| API-005 | The API returns the current game status.                          |     2 |    ☐    |
-| API-006 | The API rejects guesses that do not meet the game's requirements. |     2 |    ☐    |
-| API-007 | The API prevents guesses after a game has ended.                  |     2 |    ☐    |
-| API-008 | The API returns appropriate errors for invalid requests.          |     2 |    ☐    |
+| API-001 | A client can request a new game with a selected word length.      |     2 |    ✅   |
+| API-002 | The API returns the current game state when a game is created.    |     2 |    ✅   |
+| API-003 | A client can submit a guess for an active game.                   |     2 |    ✅   |
+| API-004 | The API returns the evaluation of a submitted guess.              |     2 |    ✅   |
+| API-005 | The API returns the current game status.                          |     2 |    ✅   |
+| API-006 | The API rejects guesses that do not meet the game's requirements. |     2 |    ✅   |
+| API-007 | The API prevents guesses after a game has ended.                  |     2 |    ✅   |
+| API-008 | The API returns appropriate errors for invalid requests.          |     2 |    ✅   |
 
 ### Frontend
 

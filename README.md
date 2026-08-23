@@ -23,6 +23,12 @@ To run the Java application:
 ./mvnw exec:java
 ```
 
+To start the Springboot server:
+
+```bash
+mvn spring-boot:run
+```
+
 ### Frontend
 
 From the project root:

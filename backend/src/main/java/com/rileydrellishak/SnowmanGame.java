@@ -4,6 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SnowmanGame {
+    public SnowmanGame(Integer wordLength) {
+        if (wordLength > MAX_WORD_LENGTH || wordLength < MIN_WORD_LENGTH) {
+            String errorString = "Word length must be between 4 and 7 letters.";
+            throw new InvalidWordLengthException(errorString);
+        } else {
+            this.hiddenWord = this.hiddenWords[wordLength-4];
+        }
+    }
+
     private String[] hiddenWords = {"game", "house", "hidden", "differs"};
 
     private static final int MAX_NUM_GUESSES = 5;
@@ -17,15 +26,6 @@ public class SnowmanGame {
     public boolean winState = false;
     public boolean stillPlaying = true;
 
-    public void createNewGame(int wordLength) {
-        if (wordLength > MAX_WORD_LENGTH || wordLength < MIN_WORD_LENGTH) {
-            String errorString = "Word length must be between 4 and 7 letters.";
-            throw new InvalidWordLengthException(errorString);
-        } else {
-            this.hiddenWord = this.hiddenWords[wordLength-4];
-        }
-    }
-
     public boolean checkWordLength(String word) {
         return word.length() == this.hiddenWord.length();
     }
@@ -35,24 +35,25 @@ public class SnowmanGame {
     }
 
     public boolean checkGuessedWord(String word) {
-    int correctCount = 0;
+        int correctCount = 0;
 
-    for (int i = 0; i < word.length(); i++) {
-        char letter = word.charAt(i);
-        char hiddenLetter = this.hiddenWord.charAt(i);
+        for (int i = 0; i < word.length(); i++) {
+            char letter = word.charAt(i);
+            char hiddenLetter = this.hiddenWord.charAt(i);
 
-        if (letter == hiddenLetter) {
-            correctCount++;
+            if (letter == hiddenLetter) {
+                correctCount++;
+            }
         }
+
+        this.winState = correctCount == this.hiddenWord.length();
+        this.stillPlaying = !this.winState;
+
+        return this.winState;
     }
 
-    this.winState = correctCount == this.hiddenWord.length();
-    this.stillPlaying = !this.winState;
-
-    return this.winState;
-}
-
     private String canGuess() {
+        
         if (!this.winState && this.numGuesses >= MAX_NUM_GUESSES) {
             return String.format(
                 "Max num of guesses reached. The word was %s.",
@@ -65,11 +66,11 @@ public class SnowmanGame {
         return "";
     }
     
-    public void submitGuess(String word) {
+    public Map<Integer, String> submitGuess(String word) {
         if (!this.canGuess().isEmpty()) {
             throw this.winState
-            ? new CompletedGameCannotAcceptAdditionalGuesses(this.canGuess())
-            : new MaxNumGuessesReached(this.canGuess());
+                ? new CompletedGameCannotAcceptAdditionalGuesses(this.canGuess())
+                : new MaxNumGuessesReached(this.canGuess());
         }
 
         if (!checkWordLength(word)) {
@@ -77,8 +78,10 @@ public class SnowmanGame {
                 String.format("\"%s\" is too %s.", word,
                     word.length() > this.hiddenWord.length() ? "long" : "short")
             );
-        } 
-        
+        }
+
+        Map<Integer, String> evaluation = evaluateGuess(word);
+
         this.guessedWords[numGuesses] = word;
         numGuesses += 1;
         this.checkGuessedWord(word);
@@ -86,6 +89,8 @@ public class SnowmanGame {
         if (numGuesses == MAX_NUM_GUESSES) {
             this.stillPlaying = false;
         }
+
+        return evaluation;
     }
 
     public Map<Integer, Character> mapWord(String word) {

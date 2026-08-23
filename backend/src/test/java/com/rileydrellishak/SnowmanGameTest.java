@@ -1,6 +1,11 @@
 package com.rileydrellishak;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,18 +13,12 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.rileydrellishak.InvalidWordLengthException;
-import com.rileydrellishak.MaxNumGuessesReached;
-import com.rileydrellishak.CompletedGameCannotAcceptAdditionalGuesses;
-
 public class SnowmanGameTest {
-    SnowmanGame testGame = new SnowmanGame();
-
     // Counting the number of guesses
     @Test
     void newGameHasZeroGuesses() {
         int numGuesses = 0;
-
+        SnowmanGame testGame = new SnowmanGame(4);
         assertEquals(numGuesses, testGame.numGuesses);
         for (String word: testGame.guessedWords) {
             assertNull(word);
@@ -28,6 +27,7 @@ public class SnowmanGameTest {
 
     @Test
     void gameShowsNumOfGuessesSubmittedSoFar() {
+        SnowmanGame testGame = new SnowmanGame(4);
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool", "fool", "stay", "make"};
         for (int i = 0; i < words.length; i++) {
@@ -40,6 +40,7 @@ public class SnowmanGameTest {
     @Test
     void rejectsWordsThatAreInvaidLengths() {
         String[] words = {"the", "abcdefghijklm"};
+        SnowmanGame testGame = new SnowmanGame(4);
 
         for (String word : words) {
             assertFalse(testGame.checkWordLength(word));
@@ -48,6 +49,7 @@ public class SnowmanGameTest {
 
     @Test
     void acceptsWordsThatAreValidLengths() {
+        SnowmanGame testGame = new SnowmanGame(5);
         testGame.hiddenWord = "guess";
         String[] words = {"guess", "messy", "house", "horse"};
         
@@ -59,6 +61,8 @@ public class SnowmanGameTest {
     // Submit guesses and persist guesses
     @Test
     void playerSubmitsWordFirstGuess() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "guess";
         String guess = "guess";
 
@@ -74,6 +78,8 @@ public class SnowmanGameTest {
     @Test
     void playSubmitsWordMultipleGuesses() {
         String[] guesses = {"guess", "messy", "hello", null, null};
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "words";
         for (int i = 0; i < testGame.getHiddenWordLength(); i++) {
             if (guesses[i] == null) {
@@ -89,6 +95,8 @@ public class SnowmanGameTest {
     // Ensures invalid guesses are not persisted
     @Test
     void playerSubmitsInvalidWord() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         String[] invalidWords = {"the", "abcdefghijklm"};
 
         for (String word: invalidWords) {
@@ -113,6 +121,7 @@ public class SnowmanGameTest {
     // Confirms guessing the correct word turns the winState to true
     @Test
     void playerGuessesCorrectWord() {
+        SnowmanGame testGame = new SnowmanGame(4);
         testGame.hiddenWord = "guess";
         testGame.submitGuess("guess");
 
@@ -124,6 +133,8 @@ public class SnowmanGameTest {
     
     @Test
     void mapWordMapsIndicesToChars() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         String example = "word";
         Map<Integer, Character> expectedMap = new HashMap<>();
         expectedMap.put(0, 'w');
@@ -137,8 +148,8 @@ public class SnowmanGameTest {
     // Creating a new game
     @Test
     void createNewGameWithValidWordLength() {
-        int wordLength = 5;
-        testGame.createNewGame(wordLength);
+        Integer wordLength = 5;
+        SnowmanGame testGame = new SnowmanGame(wordLength);
         assertEquals(wordLength, testGame.getHiddenWordLength());
     }
 
@@ -150,7 +161,7 @@ public class SnowmanGameTest {
 
             InvalidWordLengthException exception = assertThrows(
                 InvalidWordLengthException.class, () -> {
-                    testGame.createNewGame(i);;
+                    new SnowmanGame(i);;
                 }
             );
             assertEquals(errorString, exception.getMessage());
@@ -160,6 +171,8 @@ public class SnowmanGameTest {
     // Comparing the guessed word to the hidden word
     @Test
     void evaluateGuessAllAbsent() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "horse";
         String guess = "quick";
         Map<Integer, String> expected = new HashMap<>();
@@ -174,6 +187,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessAllCorrect() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "horse";
         String guess = "horse";
         Map<Integer, String> expected = new HashMap<>();
@@ -188,6 +203,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessAllPresent() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "abcde";
         String guess = "eabcd";
         Map<Integer, String> expected = new HashMap<>();
@@ -202,6 +219,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessAllThreeStatuses() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "horse";
         String guess = "shone";
         Map<Integer, String> expected = new HashMap<>();
@@ -216,6 +235,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessWithDuplicateLetters() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "valley";
         String guess = "alleys";
         Map<Integer, String> expected = new HashMap<>();
@@ -231,6 +252,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessDoesNotOvercountDuplicateLetters() {
+        SnowmanGame testGame = new SnowmanGame(5);
+
         testGame.hiddenWord = "valley";
         String guess = "llllll";
 
@@ -247,6 +270,8 @@ public class SnowmanGameTest {
 
     @Test
     void evaluateGuessWhenHiddenHasDuplicates() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "boom";
         String guess = "boss";
         Map<Integer, String> expected = new HashMap<>();
@@ -262,6 +287,8 @@ public class SnowmanGameTest {
     // Validating that guessing the correct word results in a win
     @Test
     void guessCorrectWordResultsInWinStatus() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool", "game"};
         for (String word: words) {
@@ -276,6 +303,8 @@ public class SnowmanGameTest {
     // Scenarios that use all the guesses
     @Test
     void useAllGuessesAndLoseGame() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool", "fool", "dome", "shed"};
         for (String word: words) {
@@ -288,6 +317,8 @@ public class SnowmanGameTest {
 
     @Test
     void exceedingNumOfGuessesThrowsMaxNumGuessesError() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool", "fool", "dome", "shed"};
         for (String word: words) {
@@ -312,6 +343,8 @@ public class SnowmanGameTest {
 
     @Test
     void completedGameCannotAcceptAdditionalGuesses() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool", "game"};
         for (String word: words) {
@@ -332,6 +365,8 @@ public class SnowmanGameTest {
 
     @Test
     void gameProvidesStatus() {
+        SnowmanGame testGame = new SnowmanGame(4);
+
         testGame.hiddenWord = "game";
         String[] words = {"home", "cool"};
         for (String word: words) {
