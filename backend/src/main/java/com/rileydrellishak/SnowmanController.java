@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class SnowmanController {
     private SnowmanGame currentGame;
 
@@ -65,7 +67,6 @@ public class SnowmanController {
         }
 
         Map<Integer, String> evaluation = this.currentGame.submitGuess(guess);
-
         return ResponseEntity.ok(evaluation);
     }
 }
